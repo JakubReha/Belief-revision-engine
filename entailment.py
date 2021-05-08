@@ -1,4 +1,3 @@
-import numpy as np
 import itertools
 from sympy.logic.boolalg import to_cnf, Or, And
 
@@ -13,7 +12,7 @@ def conjunction(clause):
     return split(clause, And)
 
 
-def split(clause), op:
+def split(clause, op):
     result = []
 
     def recurse(clause):
@@ -25,6 +24,22 @@ def split(clause), op:
     clause = [clause]
     recurse(clause)
     return result
+
+
+def resolution(p,q):
+
+    clauses = []
+    list_dp = disjunction(p)
+    list_dq = disjunction(q)
+
+    for dp in list_dp:
+        for dq in list_dq:
+            if dp == ~dq or ~dp == dq:
+                res = remove_elem(dp, list_dp) + remove_elem(dq, list_dq)
+                res = list(set(res))
+                new_list = Or(*res)
+                clauses.append(new_list)
+    return clauses
     
     
 def entails(KB, formula):
@@ -53,22 +68,6 @@ def entails(KB, formula):
         for c in result:
             if c not in clauses:
                 clauses.append(c)
-
-
-def resolution(p,q):
-
-    clauses = []
-    list_dp = disjunction(p)
-    list_dq = disjunction(q)
-
-    for dp in list_dp:
-        for dq in list_dq:
-            if dp == ~dq or ~dp == dq:
-                res = remove_elem(dp, list_dp) + remove_elem(dq, list_dq)
-                res = list(set(res))
-                new_list = Or(*res)
-                clauses.append(new_list)
-    return clauses
 
 if __name__ == '__main__':
     formula1 = "~a >> b"
