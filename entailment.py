@@ -5,12 +5,6 @@ from sympy.logic.boolalg import to_cnf, Or, And
 def remove_elem(elem, clause):
     return [x for x in clause if x != elem]
 
-def disjunction(clause):
-    return split(clause, Or)
-
-def conjunction(clause):
-    return split(clause, And)
-
 
 def split(clause, op):
     result = []
@@ -29,8 +23,8 @@ def split(clause, op):
 def resolution(p,q):
 
     clauses = []
-    list_dp = disjunction(p)
-    list_dq = disjunction(q)
+    list_dp = split(p,Or)
+    list_dq = split(q, Or)
 
     for dp in list_dp:
         for dq in list_dq:
@@ -42,12 +36,9 @@ def resolution(p,q):
     return clauses
     
     
-def entails(KB, formula):
+def entails(KBb, formula):
     formula = to_cnf(formula)
-    clauses = []
-    for f in KB:
-        clauses += conjunction(f)
-    clauses += conjunction(to_cnf(~formula))
+    clauses = KBb + split(to_cnf(~formula), And)
 
 
     if False in clauses:
@@ -69,12 +60,3 @@ def entails(KB, formula):
             if c not in clauses:
                 clauses.append(c)
 
-if __name__ == '__main__':
-    formula1 = "~a >> b"
-    formula2 = "b >> a"
-    formula3 = "a >> c & d"
-    KB = [to_cnf(formula1), to_cnf(formula2),to_cnf(formula3)]
-    formula4 = "a & c & d"
-
-    print(KB)
-    print(entails(KB,formula4))

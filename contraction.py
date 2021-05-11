@@ -6,35 +6,33 @@ import numpy as np
 
 
 # 1) implement the order (based on the complexity of the predicate, when it was added to the KB)
-# 2) transform the KB  from  [a & b, c, c| b] to [a , b, c, c| b] (remove the contractions)
-# 3) create some user interface
 
-def contraction(KB, formula):
+def contraction(KBb, formula):
         formula = to_cnf(formula)
         comb = []
-        for i in range(1,len(KB)+1):
-            comb += list(itertools.combinations(KB, i))
+        for i in range(1,len(KBb)+1):
+            comb += list(itertools.combinations(KBb, i))
 
-        new_KB = []
+        new_KBb = []
         for c in comb:
             if not entails(list(c), formula):
-                new_KB.append(c)
-        max_l = max([len(c) for c in new_KB ])
+                new_KBb.append(c)
+        max_l = max([len(c) for c in new_KBb ])
         max_c = []
-        for c in new_KB:
+        for c in new_KBb:
             if len(c) == max_l:
                 max_c.append(c)
-        result = set(KB).intersection(*set(max_c))
+        result = list(set(KBb).intersection(*set(max_c)))
         if len(result) == 0: 
             # TO DO !!!!!! if the intersection is None, return one of the remainder sets based on the order
             # for now returning UNION which is wrong
-            return set(max_c[0]).union(*set(max_c[1:]))
+            return list(set(max_c[0]).union(*set(max_c[1:])))
         return result
         
-def revision(KB, formula):
-    KB = contraction(KB, ~formula)
-    KB += to_cnf(formula)
-    return KB
+def revision(KBb, formula):
+    KBb = contraction(KBb, ~formula)
+    KBb += to_cnf(formula)
+    return KBb
 
         
 def bi_imp(p,q):
