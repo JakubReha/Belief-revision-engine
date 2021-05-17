@@ -8,8 +8,6 @@ import numpy as np
 
 
 
-# 1) implement the order (based on the complexity of the predicate, when it was added to the KB)
-
 def contraction(KB, formula):
         KBb = KB.base
         comb = []

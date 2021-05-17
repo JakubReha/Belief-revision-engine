@@ -39,23 +39,23 @@ def user_input(KB):
             print('Enter a belief to add to the Belief base:')
             belief = input()
             try:
-                print('(Optional) Please enter the order of your belief (from 0 to 1):')
-                print('If None the order will be calcualted automatically')
-                order = input()
+                print('(Optional) Please enter the entrenchment of your belief (from 0 to 1):')
+                print('If None the entrenchment will be calcualted automatically')
+                entrenchment = input()
                 if entails(KB.base, belief):
                     print('Belief is already entailed by the the Belief base')
                 elif entails(KB.base, "~("+belief+")"):
                     print('Belief is in contradicition with the Belief base')
                 else:
-                    if order:
-                        KB.add_belief(Belief(belief,float(order)))
+                    if entrenchment:
+                        KB.add_belief(Belief(belief,float(entrenchment)))
                     else:
                         KB.add_belief(Belief(belief,None))
                 print("The new Belief base: ", KB.base)
             except SympifyError:
                 print('Invalid formula')
             except ValueError:
-                print('Order has to be between 0 to 1')
+                print('entrenchment has to be between 0 to 1')
             print()
         
 
@@ -96,12 +96,12 @@ def user_input(KB):
             print()
             print('Enter a formula to revise the Belief base:')
             formula = input()
-            print('(Optional) Please enter the order of your belief (from 0 to 1):')
-            print('If None the order will be calcualted automatically')
-            order = input()
+            print('(Optional) Please enter the entrenchment of your belief (from 0 to 1):')
+            print('If None the entrenchment will be calculated automatically')
+            entrenchment = input()
             try:
-                if order:
-                    belief = Belief(formula,float(order))
+                if entrenchment:
+                    belief = Belief(formula,float(entrenchment))
                 else:
                     belief = Belief(formula,None)
                 KBb = contraction(KB, "~"+formula)
@@ -121,7 +121,7 @@ def user_input(KB):
 
         elif action == 'print' or action == 'p':
             print()
-            print('--- Print belief base together with the order of beliefs---')
+            print('--- Print belief base together with the entrenchment of beliefs---')
             print(KB.beliefs)
             print()
 

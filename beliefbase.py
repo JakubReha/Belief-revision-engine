@@ -18,19 +18,19 @@ class Belief_Base:
         self.base = []
         
     def add_belief(self, belief): 
-        new_order = 1
-        if belief.order is None:
+        new_entrenchment = 1
+        if belief.entrenchment is None:
             new_atoms = belief.formula.atoms()
             for b in self.beliefs:
                 if new_atoms & b.formula.atoms():
-                    b.order = b.order - 0.1*b.order
+                    b.entrenchment = b.entrenchment - 0.1*b.entrenchment
                     if recurse_2([belief.formula]) < recurse_2([b.formula]):
-                        b.order = b.order - 0.1*b.order
+                        b.entrenchment = b.entrenchment - 0.1*b.entrenchment
                     else:
-                        new_order = new_order - 0.1*new_order
-            # belief with the same elements get their order updated to be lower (temporal effect)
+                        new_entrenchment = new_entrenchment - 0.1*new_entrenchment
+            # belief with the same elements get their entrenchment updated to be lower (temporal effect)
             # if the belief with the same elements has more operators it also gets a penalty
-        belief.order = new_order
+        belief.entrenchment = new_entrenchment
         self.beliefs.append(belief)
         self.base += split(to_cnf(belief.formula), And)
         self.base = list(set(self.base))
@@ -39,11 +39,11 @@ class Belief_Base:
     
 class Belief:
     
-    def __init__(self, formula, order = None):
+    def __init__(self, formula, entrenchment = None):
         self.formula = to_cnf(formula)
-        self.order = order
+        self.entrenchment = entrenchment
     def __repr__(self):
-        return f'Belief: {self.formula} , Order: {self.order}'
+        return f'Belief: {self.formula} , entrenchment: {self.entrenchment}'
     
     def __eq__(self, other):
         if (isinstance(other, Belief)):
@@ -57,11 +57,11 @@ class Belief:
 
     def __add__(self, other):
         if (isinstance(other, Belief)):
-            return self.order + other.order
+            return self.entrenchment + other.entrenchment
 
     def __radd__(self, other):
         if other == 0:
-            return self.order
+            return self.entrenchment
         else:
             return self.__add__(other)
 
